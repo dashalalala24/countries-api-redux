@@ -1,6 +1,7 @@
 {
   "name": "countries-flags",
   "version": "0.1.0",
+  "author": "Daria Lazarchuk",
   "private": true,
   "dependencies": {
     "axios": "^0.22.0",

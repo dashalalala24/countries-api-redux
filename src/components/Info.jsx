@@ -1,4 +1,9 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { selectNeighbours } from '../store/details/details-selectors';
+import { loadNeighbours, setNeighbours } from '../store/details/details-actions';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.section`
   margin-top: 3rem;
@@ -86,75 +91,124 @@ const Tag = styled.span`
   cursor: pointer;
 `;
 
-export const Info = (props) => {
+export const Info = (country) => {
   const {
     name,
-    nativeName,
-    flag,
+    flags,
     capital,
     population,
     region,
     subregion,
-    topLevelDomain,
-    currencies = [],
-    languages = [],
+    tld,
+    currencies = {},
+    languages = {},
     borders = [],
-    push,
-  } = props;
+  } = country.props;
+
+  const getNativeName = () => {
+    for (let key in name.nativeName) {
+      const nameKey = key;
+      return name.nativeName[nameKey].common;
+    }
+  };
+
+  const getValues = (obj) => {
+    const keys = Object.keys(obj);
+    let values = [];
+    obj === currencies
+      ? keys.map((code) => values.push(' ' + obj[code].name))
+      : keys.map((code) => values.push(' ' + obj[code]));
+
+    return values;
+  };
+
+  // const getCurrency = () => {
+  //   const curencyKeys = Object.keys(currencies);
+  //   let countryCurrencies = [];
+
+  //   curencyKeys.map((currCode) => countryCurrencies.push(' ' + currencies[currCode].name));
+
+  //   return countryCurrencies;
+  // };
+
+  // const getLanguages = () => {
+  //   const languagesKeys = Object.keys(languages);
+  //   let countryLanguages = [];
+
+  //   languagesKeys.map((langCode) => countryLanguages.push(' ' + languages[langCode]));
+
+  //   return countryLanguages;
+  // };
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const neighbours = useSelector(selectNeighbours);
+
+  useEffect(() => {
+    if (borders.length) {
+      dispatch(loadNeighbours(borders));
+    }
+  }, [borders]);
 
   return (
     <Wrapper>
-      <InfoImage src={flag} alt={name} />
-
+      <InfoImage
+        src={flags.svg}
+        alt={name.common}
+      />
       <div>
-        <InfoTitle>{name}</InfoTitle>
+        <InfoTitle>{name.common}</InfoTitle>
         <ListGroup>
           <List>
             <ListItem>
-              <b>Native Name:</b> {nativeName}
+              <b>Native Name:</b>{' '}
+              {'nativeName' in name ? getNativeName() : 'there is no native name'}
             </ListItem>
             <ListItem>
-              <b>Population</b> {population}
+              <b>Population:</b> {population} people
             </ListItem>
             <ListItem>
               <b>Region:</b> {region}
             </ListItem>
             <ListItem>
-              <b>Sub Region:</b> {subregion}
+              <b>Sub Region:</b> {subregion ? subregion : 'there is no subregion'}
             </ListItem>
             <ListItem>
-              <b>Capital:</b> {capital}
+              <b>Capital:</b> {capital ? capital : 'there is no capital'}
             </ListItem>
           </List>
           <List>
             <ListItem>
-              <b>Top Level Domain</b>{' '}
-              {topLevelDomain.map((d) => (
-                <span key={d}>{d}</span>
+              <b>Top Level Domain:</b>{' '}
+              {tld.map((d) => (
+                <span key={d}>{d} </span>
               ))}
             </ListItem>
             <ListItem>
-              <b>Currency</b>{' '}
-              {currencies.map((c) => (
-                <span key={c.code}>{c.name} </span>
-              ))}
+              <b>Currency:</b>{' '}
+              {Object.keys(currencies).length === 0
+                ? 'there is no currency'
+                : getValues(currencies).toString()}
             </ListItem>
             <ListItem>
-              <b>Top Level Domain</b>{' '}
-              {languages.map((l) => (
-                <span key={l.name}>{l.name}</span>
-              ))}
+              <b>Languages:</b>{' '}
+              {Object.keys(languages).length === 0
+                ? 'there are no languages'
+                : getValues(languages).toString()}
             </ListItem>
           </List>
         </ListGroup>
         <Meta>
           <b>Border Countries</b>
           {!borders.length ? (
-            <span>There is no border countries</span>
+            <span>There are no border countries</span>
           ) : (
             <TagGroup>
-              {[].map((b) => (
-                <Tag key={b} onClick={() => push(`/country/${b}`)}>
+              {neighbours.map((b) => (
+                <Tag
+                  key={b}
+                  onClick={() => navigate(`/country/${b}`)}>
                   {b}
                 </Tag>
               ))}
