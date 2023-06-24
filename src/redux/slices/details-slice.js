@@ -1,40 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-const BASE_URL = 'https://restcountries.com/v3.1/';
-
-export const ALL_COUNTRIES = BASE_URL + 'all?fields=name,capital,flags,population,region';
-
-export const searchByCountry = (name) => BASE_URL + 'name/' + name;
-
-export const filterByCode = (codes) => BASE_URL + 'alpha?codes=' + codes.join(',');
+import { loadCountryDetails, loadCountryNeighbours } from '../api';
 
 export const getCountryDetails = createAsyncThunk('@@details/getCountryDetails', async (name) => {
-  try {
-    const response = await fetch(searchByCountry(name));
-    if (!response.ok) {
-      return response.status;
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    return error.message;
-  }
+  return await loadCountryDetails(name);
 });
 
 export const getCountryNeighbours = createAsyncThunk(
   '@@details/getCountryNeighbours',
   async (codes) => {
-    try {
-      const response = await fetch(filterByCode(codes));
-      if (!response.ok) {
-        return response.status;
-      }
-      const data = await response.json();
-      // console.log(data);
-      return data;
-    } catch (error) {
-      return error.message;
-    }
+    return await loadCountryNeighbours(codes);
   }
 );
 
@@ -55,30 +30,28 @@ const detailsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getCountryDetails.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(getCountryDetails.rejected, (state, action) => {
-        state.status = 'rejected';
-        state.error = action.payload || action.meta.error;
-      })
       .addCase(getCountryDetails.fulfilled, (state, action) => {
         state.status = 'fulfilled';
         state.currentCountry = action.payload[0];
       })
-      .addCase(getCountryNeighbours.rejected, (state, action) => {
-        state.status = 'rejected';
-        state.error = action.payload || action.meta.error;
-      })
-      .addCase(getCountryNeighbours.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
       .addCase(getCountryNeighbours.fulfilled, (state, action) => {
         state.status = 'fulfilled';
-        state.neighbors = action.payload.map((country) => country.name);
-      });
+        state.neighbours = action.payload.map((country) => country.name.common);
+      })
+      .addMatcher(
+        (action) => action.type.endsWith('/pending'),
+        (state) => {
+          state.status = 'loading';
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.status = 'rejected';
+          state.error = action.payload || action.meta.error;
+        }
+      );
   },
 });
 

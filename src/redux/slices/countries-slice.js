@@ -1,24 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import * as api from '../api';
-
-const BASE_URL = 'https://restcountries.com/v3.1/';
-
-const ALL_COUNTRIES = BASE_URL + 'all?fields=name,capital,flags,population,region';
+import { loadAllCountries } from '../api';
 
 export const getAllCountries = createAsyncThunk('@@countries/getAllCountries', async () => {
-  try {
-    const response = await fetch(
-      'https://restcountries.com/v3.1/all?fields=name,capital,flags,population,region'
-    );
-    if (!response.ok) {
-      return response.status;
-    }
-    const data = await response.json();
-    // console.log(data);
-    return data;
-  } catch (error) {
-    return error.message;
-  }
+  return await loadAllCountries();
 });
 
 const initialState = {

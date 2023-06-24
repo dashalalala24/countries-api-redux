@@ -5,27 +5,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { List } from '../components/List';
 import { Card } from '../components/Card';
 import { Controls } from '../components/Controls';
+
+import { selectControls } from '../redux/slices/controls-slice';
 import {
-  selectAllCountries,
   selectCountriesInfo,
   selectSearchedCountries,
   getAllCountries,
 } from '../redux/slices/countries-slice';
-import { selectControls } from '../redux/slices/controls-slice';
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const controls = useSelector(selectControls);
-
   const countries = useSelector((state) => selectSearchedCountries(state, controls));
-
-  // const countries = useSelector((state) => selectAllCountries(state));
-
   const { status, error, quantity } = useSelector(selectCountriesInfo);
-
-  console.log(countries);
 
   useEffect(() => {
     if (!quantity) {

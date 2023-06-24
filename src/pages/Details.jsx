@@ -15,20 +15,15 @@ export const Details = () => {
   const { name } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { status, error, currentCountry } = useSelector(selectDetails);
+
+  const { status, error } = useSelector(selectDetails);
   const country = useSelector(selectCurrentCountry);
 
-  console.log(name);
   useEffect(() => {
-    // if (country) {
     dispatch(getCountryDetails(name));
-    console.log('mount');
-    console.log({ currentCountry });
-    // }
 
     return () => {
       dispatch(resetDetails());
-      console.log('unmount');
     };
   }, [name]);
 

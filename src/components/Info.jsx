@@ -104,20 +104,10 @@ export const Info = (country) => {
     borders = [],
   } = country.props;
 
-  // const {
-  //   name = {},
-  //   flags = {},
-  //   capital,
-  //   population,
-  //   region,
-  //   subregion,
-  //   tld = [],
-  //   currencies = {},
-  //   languages = {},
-  //   borders = [],
-  // } = useSelector(selectCurrentCountry);
+  const navigate = useNavigate();
 
-  console.log(country.props);
+  const dispatch = useDispatch();
+  const neighbours = useSelector(selectNeighbours);
 
   const getNativeName = () => {
     for (let key in name.nativeName) {
@@ -135,29 +125,6 @@ export const Info = (country) => {
 
     return values;
   };
-
-  // const getCurrency = () => {
-  //   const curencyKeys = Object.keys(currencies);
-  //   let countryCurrencies = [];
-
-  //   curencyKeys.map((currCode) => countryCurrencies.push(' ' + currencies[currCode].name));
-
-  //   return countryCurrencies;
-  // };
-
-  // const getLanguages = () => {
-  //   const languagesKeys = Object.keys(languages);
-  //   let countryLanguages = [];
-
-  //   languagesKeys.map((langCode) => countryLanguages.push(' ' + languages[langCode]));
-
-  //   return countryLanguages;
-  // };
-
-  const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-  const neighbours = useSelector(selectNeighbours);
 
   useEffect(() => {
     if (borders.length) {
