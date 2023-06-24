@@ -1,6 +1,6 @@
 # REST Countries API with color theme switcher solution
 
-### This project was made in order to practice skills of using Redux and Redux Thunk.
+### This project was made in order to practice skills of using Vanilla Redux and Redux Toolkit.
 
 This is a solution to the [REST Countries API with color theme switcher challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/rest-countries-api-with-color-theme-switcher-5cacc469fec04111f7b848ca).
 
