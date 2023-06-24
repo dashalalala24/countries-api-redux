@@ -3,21 +3,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoArrowBack } from 'react-icons/io5';
 import { Button } from '../components/Button';
 import { Info } from '../components/Info';
-import { selectCurrentCountry, selectDetails } from '../store/details/details-selectors';
 import { useEffect } from 'react';
-import { loadCountryDetails, resetDetails } from '../store/details/details-actions';
+import {
+  getCountryDetails,
+  resetDetails,
+  selectCurrentCountry,
+  selectDetails,
+} from '../redux/slices/details-slice';
 
 export const Details = () => {
   const { name } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { status, error } = useSelector(selectDetails);
+  const { status, error, currentCountry } = useSelector(selectDetails);
   const country = useSelector(selectCurrentCountry);
 
+  console.log(name);
   useEffect(() => {
-    dispatch(loadCountryDetails(name));
-
+    // if (country) {
+    dispatch(getCountryDetails(name));
     console.log('mount');
+    console.log({ currentCountry });
+    // }
 
     return () => {
       dispatch(resetDetails());
@@ -32,7 +39,7 @@ export const Details = () => {
       <Button onClick={() => navigate(-1)}>
         <IoArrowBack /> Back
       </Button>
-      {country ? <Info props={country} /> : null}
+      {country ? <Info props={country}></Info> : null}
     </div>
   );
 };

@@ -5,33 +5,35 @@ import { useSelector, useDispatch } from 'react-redux';
 import { List } from '../components/List';
 import { Card } from '../components/Card';
 import { Controls } from '../components/Controls';
-import { loadCountries } from '../store/countries/countries-actions';
 import {
   selectAllCountries,
   selectCountriesInfo,
   selectSearchedCountries,
-  selectCountriesByRegion,
-} from '../store/countries/countries-selectors';
-import { selectRegion, selectSearch, selectControls } from '../store/controls/controls-selectors';
-
-import { loadCountryDetails } from '../store/details/details-actions';
+  getAllCountries,
+} from '../redux/slices/countries-slice';
+import { selectControls } from '../redux/slices/controls-slice';
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { search, region } = useSelector(selectControls);
+  const controls = useSelector(selectControls);
 
-  const countries = useSelector((state) => selectSearchedCountries(state, { search, region }));
+  const countries = useSelector((state) => selectSearchedCountries(state, controls));
+
+  // const countries = useSelector((state) => selectAllCountries(state));
+
   const { status, error, quantity } = useSelector(selectCountriesInfo);
+
+  console.log(countries);
 
   useEffect(() => {
     if (!quantity) {
-      dispatch(loadCountries());
+      dispatch(getAllCountries());
     }
   }, [quantity]);
 
-  return status === 'fullfiled' ? (
+  return status === 'fulfilled' ? (
     <>
       <Controls />
       {error ? <h2>{error}</h2> : null}

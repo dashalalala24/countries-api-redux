@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoMoon, IoMoonOutline } from 'react-icons/io5';
 
 import { Container } from './Container';
-import { toggleTheme } from '../store/theme/theme-actions';
-import { resetControls } from '../store/controls/controls-actions';
+import { toggleTheme } from '../redux/slices/theme-slice';
+import { resetSearch } from '../redux/slices/controls-slice';
 
 const HeaderEl = styled.header`
   box-shadow: var(--shadow);
@@ -39,20 +39,16 @@ const ModeSwitcher = styled.div`
 export const Header = () => {
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
-  // const theme = 'light';
 
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const handleResetControls = () => {
-    dispatch(resetControls());
-  };
   return (
     <HeaderEl>
       <Container>
         <Wrapper>
-          <Title onClick={handleResetControls}>Where is the world?</Title>
+          <Title onClick={() => dispatch(resetSearch())}>Where is the world?</Title>
           <ModeSwitcher onClick={() => dispatch(toggleTheme(theme === 'light' ? 'dark' : 'light'))}>
             {theme === 'light' ? <IoMoonOutline size='14px' /> : <IoMoon size='14px' />}{' '}
             <span style={{ marginLeft: '0.75rem' }}>{theme} Theme</span>

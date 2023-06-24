@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { selectNeighbours } from '../store/details/details-selectors';
-import { loadNeighbours, setNeighbours } from '../store/details/details-actions';
+import { getCountryNeighbours, selectNeighbours } from '../redux/slices/details-slice';
 import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.section`
@@ -93,17 +92,32 @@ const Tag = styled.span`
 
 export const Info = (country) => {
   const {
-    name,
-    flags,
+    name = {},
+    flags = {},
     capital,
     population,
     region,
     subregion,
-    tld,
+    tld = [],
     currencies = {},
     languages = {},
     borders = [],
   } = country.props;
+
+  // const {
+  //   name = {},
+  //   flags = {},
+  //   capital,
+  //   population,
+  //   region,
+  //   subregion,
+  //   tld = [],
+  //   currencies = {},
+  //   languages = {},
+  //   borders = [],
+  // } = useSelector(selectCurrentCountry);
+
+  console.log(country.props);
 
   const getNativeName = () => {
     for (let key in name.nativeName) {
@@ -147,7 +161,7 @@ export const Info = (country) => {
 
   useEffect(() => {
     if (borders.length) {
-      dispatch(loadNeighbours(borders));
+      dispatch(getCountryNeighbours(borders));
     }
   }, [borders]);
 
@@ -155,7 +169,7 @@ export const Info = (country) => {
     <Wrapper>
       <InfoImage
         src={flags.svg}
-        alt={name.common}
+        alt={flags.alt}
       />
       <div>
         <InfoTitle>{name.common}</InfoTitle>
