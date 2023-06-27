@@ -14,5 +14,5 @@ This is a solution to the [REST Countries API with color theme switcher challeng
 * [x] toggle the color scheme between light and dark mode.
 
 ## Tech stack:
- <a href="https://react.dev/" target="_blank" rel="noreferrer"><img width="40" height="40" alt="React" src="https://simpleicons.org/icons/react.svg" /></a> | <a href="https://redux-toolkit.js.org/" target="_blank" rel="noreferrer"><img width="40" height="40" alt="Redux Toolkit" src="https://simpleicons.org/icons/redux.svg" /></a> | 
+<a href="https://react.dev/" target="_blank" rel="noreferrer"><img width="45" height="45" alt="React" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" /></a> | <a href="https://redux-toolkit.js.org/" target="_blank" rel="noreferrer"><img width="45" height="45" alt="Redux Toolkit" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg" /></a>
 | --- | --- |
